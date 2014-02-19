@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
 public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface {
 
 	public static final String[] KAFKA_PROPERTIES_NAMES = new String[] { "metadata.broker.list",
-			"request.required.acks", "request.timeout.ms", "producer.type", "serializer.class", "key.serializer.class",
+			"request.required.acks", "producer.type", "serializer.class", "request.timeout.ms", "key.serializer.class",
 			"partitioner.class", "compression.codec", "compressed.topics", "message.send.max.retries",
 			"retry.backoff.ms", "topic.metadata.refresh.interval.ms", "queue.buffering.max.ms",
 			"queue.buffering.max.messages", "queue.enqueue.timeout.ms", "batch.num.messages", "send.buffer.bytes",
