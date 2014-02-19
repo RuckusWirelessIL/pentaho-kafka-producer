@@ -14,7 +14,7 @@ import org.pentaho.di.trans.step.StepDataInterface;
  */
 public class KafkaProducerData extends BaseStepData implements StepDataInterface {
 
-	Producer<byte[], byte[]> producer;
+	Producer<Object, Object> producer;
 	RowMetaInterface outputRowMeta;
 	int inputFieldNr;
 	ValueMetaInterface inputFieldMeta;

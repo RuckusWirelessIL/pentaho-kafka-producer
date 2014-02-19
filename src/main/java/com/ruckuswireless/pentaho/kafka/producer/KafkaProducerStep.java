@@ -44,7 +44,7 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 
 		ProducerConfig producerConfig = new ProducerConfig(substProperties);
 		logBasic(Messages.getString("KafkaProducerStep.CreateKafkaProducer.Message", producerConfig.brokerList()));
-		data.producer = new Producer<byte[], byte[]>(producerConfig);
+		data.producer = new Producer<Object, Object>(producerConfig);
 		return true;
 	}
 
@@ -99,7 +99,7 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 
 		try {
 			byte[] message = data.inputFieldMeta.getBinary(r[data.inputFieldNr]);
-			data.producer.send(new KeyedMessage<byte[], byte[]>(meta.getTopic(), message));
+			data.producer.send(new KeyedMessage<Object, Object>(meta.getTopic(), message));
 			if (isRowLevel()) {
 				logRowlevel(Messages.getString("KafkaProducerStep.Log.SendingData", meta.getTopic(),
 						data.inputFieldMeta.getString(r[data.inputFieldNr])));
