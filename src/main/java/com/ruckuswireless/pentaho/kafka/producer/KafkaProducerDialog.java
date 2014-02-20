@@ -239,7 +239,11 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 			TableItem item = new TableItem(wProps.table, i > 1 ? SWT.BOLD : SWT.NONE);
 			int colnr = 1;
 			item.setText(colnr++, Const.NVL(propName, ""));
-			item.setText(colnr++, Const.NVL(value, i > 3 ? "(default)" : ""));
+			String defaultValue = KafkaProducerMeta.KAFKA_PROPERTIES_DEFAULTS.get(propName);
+			if (defaultValue == null) {
+				defaultValue = "(default)";
+			}
+			item.setText(colnr++, Const.NVL(value, defaultValue));
 		}
 		wProps.removeEmptyRows();
 		wProps.setRowNums();

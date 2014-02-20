@@ -1,5 +1,6 @@
 package com.ruckuswireless.pentaho.kafka.producer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -40,6 +41,13 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			"retry.backoff.ms", "topic.metadata.refresh.interval.ms", "queue.buffering.max.ms",
 			"queue.buffering.max.messages", "queue.enqueue.timeout.ms", "batch.num.messages", "send.buffer.bytes",
 			"client.id" };
+	public static final Map<String, String> KAFKA_PROPERTIES_DEFAULTS = new HashMap<String, String>();
+	static {
+		KAFKA_PROPERTIES_DEFAULTS.put("metadata.broker.list", "localhost:9092");
+		KAFKA_PROPERTIES_DEFAULTS.put("request.required.acks", "1");
+		KAFKA_PROPERTIES_DEFAULTS.put("producer.type", "sync");
+		KAFKA_PROPERTIES_DEFAULTS.put("serializer.class", "kafka.serializer.DefaultEncoder");
+	}
 
 	private Properties kafkaProperties = new Properties();
 	private String topic;
