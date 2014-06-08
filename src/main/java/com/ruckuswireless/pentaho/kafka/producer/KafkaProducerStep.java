@@ -99,9 +99,11 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 
 		try {
 			byte[] message = data.inputFieldMeta.getBinary(r[data.inputFieldNr]);
-			data.producer.send(new KeyedMessage<Object, Object>(meta.getTopic(), message));
+			String topic = environmentSubstitute(meta.getTopic());
+			
+			data.producer.send(new KeyedMessage<Object, Object>(topic, message));
 			if (isRowLevel()) {
-				logRowlevel(Messages.getString("KafkaProducerStep.Log.SendingData", meta.getTopic(),
+				logRowlevel(Messages.getString("KafkaProducerStep.Log.SendingData", topic,
 						data.inputFieldMeta.getString(r[data.inputFieldNr])));
 			}
 		} catch (KettleException e) {
