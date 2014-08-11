@@ -4,7 +4,7 @@
 	iconfile="logo.png"
 	description="Apache Kafka Producer"
 	tooltip="This plug-in allows writing messages through a specific topic into a Kafka stream"
-	category="Input"
+	category="Output"
 	classname="com.ruckuswireless.pentaho.kafka.producer.KafkaProducerMeta">
 	
 	<libraries>
