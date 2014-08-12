@@ -108,13 +108,14 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 					.getBinary(r[data.inputFieldNr]);
 			String topic = environmentSubstitute(meta.getTopic());
 
+			logBasic(Messages.getString("KafkaProducerStep.Log.SendingData",
+					topic));
+			if (isRowLevel()) {
+				logRowlevel(data.inputFieldMeta.getString(r[data.inputFieldNr]));
+			}
 			data.producer
 					.send(new KeyedMessage<Object, Object>(topic, message));
-			if (isRowLevel()) {
-				logRowlevel(Messages.getString(
-						"KafkaProducerStep.Log.SendingData", topic,
-						data.inputFieldMeta.getString(r[data.inputFieldNr])));
-			}
+
 		} catch (KettleException e) {
 			if (!getStepMeta().isDoingErrorHandling()) {
 				logError(Messages.getString(
@@ -133,9 +134,10 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 			throws KettleException {
 
 		KafkaProducerData data = (KafkaProducerData) sdi;
-		data.producer.close();
-		data.producer = null;
-
+		if (data.producer != null) {
+			data.producer.close();
+			data.producer = null;
+		}
 		super.stopRunning(smi, sdi);
 	}
 }
