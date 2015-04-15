@@ -16,6 +16,10 @@ public class KafkaProducerData extends BaseStepData implements StepDataInterface
 
 	Producer<Object, Object> producer;
 	RowMetaInterface outputRowMeta;
-	int inputFieldNr;
-	ValueMetaInterface inputFieldMeta;
+	int messageFieldNr;
+	int keyFieldNr;
+	boolean messageIsString;
+	boolean keyIsString;
+	ValueMetaInterface messageFieldMeta;
+	ValueMetaInterface keyFieldMeta;
 }

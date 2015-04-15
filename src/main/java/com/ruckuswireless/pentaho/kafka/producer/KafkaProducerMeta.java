@@ -51,7 +51,8 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 
 	private Properties kafkaProperties = new Properties();
 	private String topic;
-	private String field;
+	private String messageField;
+	private String keyField;
 
 	Properties getKafkaProperties() {
 		return kafkaProperties;
@@ -73,18 +74,33 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 	}
 
 	/**
-	 * @return Target field name in Kettle stream
+	 * @return Target key field name in Kettle stream
 	 */
-	public String getField() {
-		return field;
+	public String getKeyField() {
+		return keyField;
 	}
 
 	/**
 	 * @param field
-	 *            Target field name in Kettle stream
+	 *            Target key field name in Kettle stream
 	 */
-	public void setField(String field) {
-		this.field = field;
+	public void setKeyField(String field) {
+		this.keyField = field;
+	}
+
+	/**
+	 * @return Target message field name in Kettle stream
+	 */
+	public String getMessageField() {
+		return messageField;
+	}
+
+	/**
+	 * @param field
+	 *            Target message field name in Kettle stream
+	 */
+	public void setMessageField(String field) {
+		this.messageField = field;
 	}
 
 	public void check(List<CheckResultInterface> remarks, TransMeta transMeta, StepMeta stepMeta,
@@ -94,7 +110,11 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
 					.getString("KafkaProducerMeta.Check.InvalidTopic"), stepMeta));
 		}
-		if (field == null) {
+		if (messageField == null) {
+			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
+					.getString("KafkaProducerMeta.Check.InvalidField"), stepMeta));
+		}
+		if (keyField == null) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
 					.getString("KafkaProducerMeta.Check.InvalidField"), stepMeta));
 		}
@@ -119,7 +139,8 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 
 		try {
 			topic = XMLHandler.getTagValue(stepnode, "TOPIC");
-			field = XMLHandler.getTagValue(stepnode, "FIELD");
+			messageField = XMLHandler.getTagValue(stepnode, "FIELD");
+			keyField = XMLHandler.getTagValue(stepnode, "KEYFIELD");
 			Node kafkaNode = XMLHandler.getSubNode(stepnode, "KAFKA");
 			for (String name : KAFKA_PROPERTIES_NAMES) {
 				String value = XMLHandler.getTagValue(kafkaNode, name);
@@ -137,8 +158,11 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 		if (topic != null) {
 			retval.append("    ").append(XMLHandler.addTagValue("TOPIC", topic));
 		}
-		if (field != null) {
-			retval.append("    ").append(XMLHandler.addTagValue("FIELD", field));
+		if (messageField != null) {
+			retval.append("    ").append(XMLHandler.addTagValue("FIELD", messageField));
+		}
+		if (keyField != null) {
+			retval.append("    ").append(XMLHandler.addTagValue("KEYFIELD", keyField));
 		}
 		retval.append("    ").append(XMLHandler.openTag("KAFKA")).append(Const.CR);
 		for (String name : KAFKA_PROPERTIES_NAMES) {
@@ -155,7 +179,8 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			throws KettleException {
 		try {
 			topic = rep.getStepAttributeString(stepId, "TOPIC");
-			field = rep.getStepAttributeString(stepId, "FIELD");
+			messageField = rep.getStepAttributeString(stepId, "FIELD");
+			keyField = rep.getStepAttributeString(stepId, "KEYFIELD");
 			for (String name : KAFKA_PROPERTIES_NAMES) {
 				String value = rep.getStepAttributeString(stepId, name);
 				if (value != null) {
@@ -172,8 +197,11 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			if (topic != null) {
 				rep.saveStepAttribute(transformationId, stepId, "TOPIC", topic);
 			}
-			if (field != null) {
-				rep.saveStepAttribute(transformationId, stepId, "FIELD", field);
+			if (messageField != null) {
+				rep.saveStepAttribute(transformationId, stepId, "FIELD", messageField);
+			}
+			if (keyField != null) {
+				rep.saveStepAttribute(transformationId, stepId, "KEYFIELD", keyField);
 			}
 			for (String name : KAFKA_PROPERTIES_NAMES) {
 				String value = kafkaProperties.getProperty(name);
