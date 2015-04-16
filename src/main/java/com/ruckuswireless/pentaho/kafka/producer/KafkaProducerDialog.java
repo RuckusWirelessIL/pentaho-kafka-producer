@@ -45,7 +45,8 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 
 	private KafkaProducerMeta producerMeta;
 	private TextVar wTopicName;
-	private CCombo wInputField;
+	private CCombo wMessageField;
+	private CCombo wKeyField;
 	private TableView wProps;
 
 	public KafkaProducerDialog(Shell parent, Object in, TransMeta tr, String sname) {
@@ -126,33 +127,55 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 		wTopicName.setLayoutData(fdTopicName);
 		lastControl = wTopicName;
 
-		// Input field
 		RowMetaInterface previousFields;
 		try {
 			previousFields = transMeta.getPrevStepFields(stepMeta);
 		} catch (KettleStepException e) {
 			new ErrorDialog(shell, BaseMessages.getString("System.Dialog.Error.Title"),
-					Messages.getString("KafkaProducerDialog.ErrorDialog.UnableToGetInputFields.Message"), e);
+					Messages.getString("KafkaProducerDialog.ErrorDialog.UnableToGetInputFields"), e);
 			previousFields = new RowMeta();
 		}
-		Label wlInputField = new Label(shell, SWT.RIGHT);
-		wlInputField.setText(Messages.getString("KafkaProducerDialog.FieldName.Label"));
-		props.setLook(wlInputField);
-		FormData fdlInputField = new FormData();
-		fdlInputField.top = new FormAttachment(lastControl, margin);
-		fdlInputField.left = new FormAttachment(0, 0);
-		fdlInputField.right = new FormAttachment(middle, -margin);
-		wlInputField.setLayoutData(fdlInputField);
-		wInputField = new CCombo(shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
-		wInputField.setItems(previousFields.getFieldNames());
-		props.setLook(wInputField);
-		wInputField.addModifyListener(lsMod);
-		FormData fdFilename = new FormData();
-		fdFilename.top = new FormAttachment(lastControl, margin);
-		fdFilename.left = new FormAttachment(middle, 0);
-		fdFilename.right = new FormAttachment(100, 0);
-		wInputField.setLayoutData(fdFilename);
-		lastControl = wInputField;
+
+		// Message field
+		Label wlMessageField = new Label(shell, SWT.RIGHT);
+		wlMessageField.setText(Messages.getString("KafkaProducerDialog.MessageFieldName.Label"));
+		props.setLook(wlMessageField);
+		FormData fdlMessageField = new FormData();
+		fdlMessageField.top = new FormAttachment(lastControl, margin);
+		fdlMessageField.left = new FormAttachment(0, 0);
+		fdlMessageField.right = new FormAttachment(middle, -margin);
+		wlMessageField.setLayoutData(fdlMessageField);
+		wMessageField = new CCombo(shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+		wMessageField.setItems(previousFields.getFieldNames());
+		props.setLook(wMessageField);
+		wMessageField.addModifyListener(lsMod);
+		FormData fdMessageField = new FormData();
+		fdMessageField.top = new FormAttachment(lastControl, margin);
+		fdMessageField.left = new FormAttachment(middle, 0);
+		fdMessageField.right = new FormAttachment(100, 0);
+		wMessageField.setLayoutData(fdMessageField);
+		lastControl = wMessageField;
+
+		// Key Field
+		Label wlKeyField = new Label(shell, SWT.RIGHT);
+		wlKeyField.setText(Messages.getString("KafkaProducerDialog.KeyFieldName.Label"));
+		props.setLook(wlKeyField);
+		FormData fdlKeyField = new FormData();
+		fdlKeyField.top = new FormAttachment(lastControl, margin);
+		fdlKeyField.left = new FormAttachment(0, 0);
+		fdlKeyField.right = new FormAttachment(middle, -margin);
+		wlKeyField.setLayoutData(fdlKeyField);
+		wKeyField = new CCombo(shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+		wKeyField.setItems(previousFields.getFieldNames());
+		props.setLook(wKeyField);
+		wKeyField.addModifyListener(lsMod);
+		FormData fdKeyField = new FormData();
+		fdKeyField.top = new FormAttachment(lastControl, margin);
+		fdKeyField.left = new FormAttachment(middle, 0);
+		fdKeyField.right = new FormAttachment(100, 0);
+		wKeyField.setLayoutData(fdKeyField);
+		lastControl = wKeyField;
+
 
 		// Buttons
 		wOK = new Button(shell, SWT.PUSH);
@@ -198,7 +221,8 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 		};
 		wStepname.addSelectionListener(lsDef);
 		wTopicName.addSelectionListener(lsDef);
-		wInputField.addSelectionListener(lsDef);
+		wMessageField.addSelectionListener(lsDef);
+		wKeyField.addSelectionListener(lsDef);
 
 		// Detect X or ALT-F4 or something that kills this window...
 		shell.addShellListener(new ShellAdapter() {
@@ -230,7 +254,8 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 			wStepname.setText(stepname);
 		}
 		wTopicName.setText(Const.NVL(producerMeta.getTopic(), ""));
-		wInputField.setText(Const.NVL(producerMeta.getField(), ""));
+		wMessageField.setText(Const.NVL(producerMeta.getMessageField(), ""));
+		wKeyField.setText(Const.NVL(producerMeta.getKeyField(), ""));
 
 		Properties kafkaProperties = producerMeta.getKafkaProperties();
 		for (int i = 0; i < KafkaProducerMeta.KAFKA_PROPERTIES_NAMES.length; ++i) {
@@ -263,7 +288,8 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 	 */
 	private void setData(KafkaProducerMeta producerMeta) {
 		producerMeta.setTopic(wTopicName.getText());
-		producerMeta.setField(wInputField.getText());
+		producerMeta.setMessageField(wMessageField.getText());
+		producerMeta.setKeyField(wKeyField.getText());
 
 		Properties kafkaProperties = producerMeta.getKafkaProperties();
 		int nrNonEmptyFields = wProps.nrNonEmpty();

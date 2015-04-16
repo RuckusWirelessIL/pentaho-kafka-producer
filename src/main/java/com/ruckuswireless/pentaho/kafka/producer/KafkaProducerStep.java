@@ -1,5 +1,6 @@
 package com.ruckuswireless.pentaho.kafka.producer;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -24,6 +25,13 @@ import org.pentaho.di.trans.step.StepMetaInterface;
  * @author Michael Spector
  */
 public class KafkaProducerStep extends BaseStep implements StepInterface {
+	private final static byte[] getUTFBytes(String source) {
+		try {
+			return source.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
+	}
 
 	public KafkaProducerStep(StepMeta stepMeta,
 			StepDataInterface stepDataInterface, int copyNr,
@@ -76,46 +84,92 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 			data.outputRowMeta = getInputRowMeta().clone();
 			meta.getFields(data.outputRowMeta, getStepname(), null, null, this);
 
-			String inputField = environmentSubstitute(meta.getField());
-
 			int numErrors = 0;
-			if (Const.isEmpty(inputField)) {
+
+			String messageField = environmentSubstitute(meta.getMessageField());
+
+			if (Const.isEmpty(messageField)) {
 				logError(Messages
-						.getString("KafkaProducerStep.Log.FieldNameIsNull")); //$NON-NLS-1$
+						.getString("KafkaProducerStep.Log.MessageFieldNameIsNull")); //$NON-NLS-1$
 				numErrors++;
 			}
-			data.inputFieldNr = inputRowMeta.indexOfValue(inputField);
-			if (data.inputFieldNr < 0) {
+			data.messageFieldNr = inputRowMeta.indexOfValue(messageField);
+			if (data.messageFieldNr < 0) {
 				logError(Messages.getString(
-						"KafkaProducerStep.Log.CouldntFindField", inputField)); //$NON-NLS-1$
+						"KafkaProducerStep.Log.CouldntFindField", messageField)); //$NON-NLS-1$
 				numErrors++;
 			}
-			if (!inputRowMeta.getValueMeta(data.inputFieldNr).isBinary()) {
+			if (!inputRowMeta.getValueMeta(data.messageFieldNr).isBinary() &&
+				!inputRowMeta.getValueMeta(data.messageFieldNr).isString()) {
 				logError(Messages.getString(
-						"KafkaProducerStep.Log.FieldNotValid", inputField)); //$NON-NLS-1$
+						"KafkaProducerStep.Log.FieldNotValid", messageField)); //$NON-NLS-1$
 				numErrors++;
 			}
+			data.messageIsString = inputRowMeta.getValueMeta(data.messageFieldNr).isString();
+			data.messageFieldMeta = inputRowMeta.getValueMeta(data.messageFieldNr);
+
+
+			String keyField = environmentSubstitute(meta.getKeyField());
+
+			if (! Const.isEmpty(keyField)) {
+				logBasic(Messages.getString("KafkaProducerStep.Log.UsingKey",
+											keyField));
+
+				data.keyFieldNr = inputRowMeta.indexOfValue(keyField);
+
+				if (data.keyFieldNr < 0) {
+					logError(Messages.getString(
+												"KafkaProducerStep.Log.CouldntFindField", keyField)); //$NON-NLS-1$
+					numErrors++;
+				}
+				if (!inputRowMeta.getValueMeta(data.keyFieldNr).isBinary() &&
+					!inputRowMeta.getValueMeta(data.keyFieldNr).isString()) {
+					logError(Messages.getString(
+												"KafkaProducerStep.Log.FieldNotValid", keyField)); //$NON-NLS-1$
+					numErrors++;
+				}
+				data.keyIsString = inputRowMeta.getValueMeta(data.keyFieldNr).isString();
+				data.keyFieldMeta = inputRowMeta.getValueMeta(data.keyFieldNr);
+			}
+
 			if (numErrors > 0) {
 				setErrors(numErrors);
 				stopAll();
 				return false;
 			}
-			data.inputFieldMeta = inputRowMeta.getValueMeta(data.inputFieldNr);
 		}
 
 		try {
-			byte[] message = data.inputFieldMeta
-					.getBinary(r[data.inputFieldNr]);
+			byte[] message = null;
+
+			if (data.messageIsString) {
+				message = getUTFBytes(data.messageFieldMeta.getString(r[data.messageFieldNr]));
+			} else {
+				message = data.messageFieldMeta.getBinary(r[data.messageFieldNr]);
+			}
 			String topic = environmentSubstitute(meta.getTopic());
 
 			logBasic(Messages.getString("KafkaProducerStep.Log.SendingData",
 					topic));
 			if (isRowLevel()) {
-				logRowlevel(data.inputFieldMeta.getString(r[data.inputFieldNr]));
+				logRowlevel(data.messageFieldMeta.getString(r[data.messageFieldNr]));
 			}
-			data.producer
-					.send(new KeyedMessage<Object, Object>(topic, message));
 
+			if (data.keyFieldNr < 0) {
+				data.producer.send(new KeyedMessage<Object, Object>(topic, message));
+			} else {
+				byte[] key = null;
+				if (data.keyIsString) {
+					key = getUTFBytes(data.keyFieldMeta.getString(r[data.keyFieldNr]));
+				} else {
+					key = data.keyFieldMeta.getBinary(r[data.keyFieldNr]);
+				}
+
+				data.producer
+					.send(new KeyedMessage<Object, Object>(topic, key, message));
+			}
+
+			incrementLinesOutput();
 		} catch (KettleException e) {
 			if (!getStepMeta().isDoingErrorHandling()) {
 				logError(Messages.getString(
