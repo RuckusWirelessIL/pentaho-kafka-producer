@@ -106,17 +106,13 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 	public void check(List<CheckResultInterface> remarks, TransMeta transMeta, StepMeta stepMeta,
 			RowMetaInterface prev, String input[], String output[], RowMetaInterface info) {
 
-		if (topic == null) {
+		if (topic == null || Const.isEmpty(topic)) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
 					.getString("KafkaProducerMeta.Check.InvalidTopic"), stepMeta));
 		}
-		if (messageField == null) {
+		if (messageField == null || Const.isEmpty(messageField)) {
 			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
-					.getString("KafkaProducerMeta.Check.InvalidField"), stepMeta));
-		}
-		if (keyField == null) {
-			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
-					.getString("KafkaProducerMeta.Check.InvalidField"), stepMeta));
+					.getString("KafkaProducerMeta.Check.InvalidMessageField"), stepMeta));
 		}
 		try {
 			new ProducerConfig(kafkaProperties);

@@ -132,7 +132,7 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 			previousFields = transMeta.getPrevStepFields(stepMeta);
 		} catch (KettleStepException e) {
 			new ErrorDialog(shell, BaseMessages.getString("System.Dialog.Error.Title"),
-					Messages.getString("KafkaProducerDialog.ErrorDialog.UnableToGetInputFields.Message"), e);
+					Messages.getString("KafkaProducerDialog.ErrorDialog.UnableToGetInputFields"), e);
 			previousFields = new RowMeta();
 		}
 
