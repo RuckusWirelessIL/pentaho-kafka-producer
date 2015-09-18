@@ -25,7 +25,11 @@ import org.pentaho.di.trans.step.StepMetaInterface;
  * @author Michael Spector
  */
 public class KafkaProducerStep extends BaseStep implements StepInterface {
+
 	private final static byte[] getUTFBytes(String source) {
+		if (source == null) {
+			return null;
+		}
 		try {
 			return source.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
