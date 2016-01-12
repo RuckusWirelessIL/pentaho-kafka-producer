@@ -35,6 +35,6 @@
 		<description locale="en_US">Apache Kafka Producer</description>
 	</localized_description>
 	<localized_tooltip>
-		<tooltip locale="en_US">This plug-in allows writing messages throug a specific topic into a Kafka stream</tooltip>
+		<tooltip locale="en_US">This plug-in allows writing messages through a specific topic into a Kafka stream</tooltip>
 	</localized_tooltip>
 </plugin>
