@@ -115,7 +115,7 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 
 			String keyField = environmentSubstitute(meta.getKeyField());
 
-			if (! Const.isEmpty(keyField)) {
+			if (!Const.isEmpty(keyField)) {
 				logBasic(Messages.getString("KafkaProducerStep.Log.UsingKey",
 											keyField));
 
@@ -134,6 +134,9 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 				}
 				data.keyIsString = inputRowMeta.getValueMeta(data.keyFieldNr).isString();
 				data.keyFieldMeta = inputRowMeta.getValueMeta(data.keyFieldNr);
+
+			} else {
+				data.keyFieldNr = -1;
 			}
 
 			if (numErrors > 0) {
