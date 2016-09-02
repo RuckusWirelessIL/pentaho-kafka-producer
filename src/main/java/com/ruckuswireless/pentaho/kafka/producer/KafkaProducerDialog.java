@@ -38,7 +38,7 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 /**
  * UI for the Kafka Producer step
- * 
+ *
  * @author Michael Spector
  */
 public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInterface {
@@ -176,7 +176,6 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 		wKeyField.setLayoutData(fdKeyField);
 		lastControl = wKeyField;
 
-
 		// Buttons
 		wOK = new Button(shell, SWT.PUSH);
 		wOK.setText(BaseMessages.getString("System.Button.OK")); //$NON-NLS-1$
@@ -312,7 +311,7 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 	}
 
 	private void ok() {
-		if (Const.isEmpty(wStepname.getText())) {
+		if (KafkaProducerMeta.isEmpty(wStepname.getText())) {
 			return;
 		}
 		setData(producerMeta);

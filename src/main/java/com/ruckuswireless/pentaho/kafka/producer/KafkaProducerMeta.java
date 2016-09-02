@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import kafka.producer.ProducerConfig;
-
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Const;
@@ -27,10 +25,12 @@ import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 import org.w3c.dom.Node;
 
+import kafka.producer.ProducerConfig;
+
 /**
  * Kafka Producer step definitions and serializer to/from XML and to/from Kettle
  * repository.
- * 
+ *
  * @author Michael Spector
  */
 public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface {
@@ -103,16 +103,16 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 		this.messageField = field;
 	}
 
-	public void check(List<CheckResultInterface> remarks, TransMeta transMeta, StepMeta stepMeta,
-			RowMetaInterface prev, String input[], String output[], RowMetaInterface info) {
+	public void check(List<CheckResultInterface> remarks, TransMeta transMeta, StepMeta stepMeta, RowMetaInterface prev,
+			String input[], String output[], RowMetaInterface info) {
 
-		if (topic == null || Const.isEmpty(topic)) {
-			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
-					.getString("KafkaProducerMeta.Check.InvalidTopic"), stepMeta));
+		if (isEmpty(topic)) {
+			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR,
+					Messages.getString("KafkaProducerMeta.Check.InvalidTopic"), stepMeta));
 		}
-		if (messageField == null || Const.isEmpty(messageField)) {
-			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, Messages
-					.getString("KafkaProducerMeta.Check.InvalidMessageField"), stepMeta));
+		if (isEmpty(messageField)) {
+			remarks.add(new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR,
+					Messages.getString("KafkaProducerMeta.Check.InvalidMessageField"), stepMeta));
 		}
 		try {
 			new ProducerConfig(kafkaProperties);
@@ -211,5 +211,9 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 	}
 
 	public void setDefault() {
+	}
+
+	public static boolean isEmpty(String str) {
+		return str == null || str.length() == 0;
 	}
 }
