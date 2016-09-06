@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<maven.compiler.source>1.6</maven.compiler.source>
-		<kettle.version>4.4.1-GA</kettle.version>
+        <kettle.version>6.1.0.2-208</kettle.version>
 		<buildId>${maven.build.timestamp}</buildId>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 	</properties>
@@ -56,12 +56,6 @@
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
 			<artifactId>kettle-core</artifactId>
-			<version>${kettle.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>pentaho-kettle</groupId>
-			<artifactId>kettle-db</artifactId>
 			<version>${kettle.version}</version>
 			<scope>compile</scope>
 		</dependency>
