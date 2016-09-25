@@ -143,8 +143,8 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 			}
 			String topic = environmentSubstitute(meta.getTopic());
 
-			logBasic(Messages.getString("KafkaProducerStep.Log.SendingData", topic));
 			if (isRowLevel()) {
+ 				logDebug(Messages.getString("KafkaProducerStep.Log.SendingData", topic));
 				logRowlevel(data.messageFieldMeta.getString(r[data.messageFieldNr]));
 			}
 
