@@ -1,5 +1,7 @@
 package com.ruckuswireless.pentaho.kafka.producer;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,10 +140,13 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			messageField = XMLHandler.getTagValue(stepnode, "FIELD");
 			keyField = XMLHandler.getTagValue(stepnode, "KEYFIELD");
 			Node kafkaNode = XMLHandler.getSubNode(stepnode, "KAFKA");
-			for (String name : KAFKA_PROPERTIES_NAMES) {
-				String value = XMLHandler.getTagValue(kafkaNode, name);
-				if (value != null) {
-					kafkaProperties.put(name, value);
+			String[] kafkaElements = XMLHandler.getNodeElements(kafkaNode);
+			if (kafkaElements != null) {
+				for (String propName : kafkaElements) {
+					String value = XMLHandler.getTagValue(kafkaNode, propName);
+					if (value != null) {
+						kafkaProperties.put(propName, value);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -161,7 +166,7 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			retval.append("    ").append(XMLHandler.addTagValue("KEYFIELD", keyField));
 		}
 		retval.append("    ").append(XMLHandler.openTag("KAFKA")).append(Const.CR);
-		for (String name : KAFKA_PROPERTIES_NAMES) {
+		for (String name : kafkaProperties.stringPropertyNames()) {
 			String value = kafkaProperties.getProperty(name);
 			if (value != null) {
 				retval.append("      " + XMLHandler.addTagValue(name, value));
@@ -177,6 +182,11 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			topic = rep.getStepAttributeString(stepId, "TOPIC");
 			messageField = rep.getStepAttributeString(stepId, "FIELD");
 			keyField = rep.getStepAttributeString(stepId, "KEYFIELD");
+			String kafkaPropsXML = rep.getStepAttributeString(stepId, "KAFKA");
+			if (kafkaPropsXML != null) {
+				kafkaProperties.loadFromXML(new ByteArrayInputStream(kafkaPropsXML.getBytes()));
+			}
+			// Support old versions:
 			for (String name : KAFKA_PROPERTIES_NAMES) {
 				String value = rep.getStepAttributeString(stepId, name);
 				if (value != null) {
@@ -199,12 +209,9 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 			if (keyField != null) {
 				rep.saveStepAttribute(transformationId, stepId, "KEYFIELD", keyField);
 			}
-			for (String name : KAFKA_PROPERTIES_NAMES) {
-				String value = kafkaProperties.getProperty(name);
-				if (value != null) {
-					rep.saveStepAttribute(transformationId, stepId, name, value);
-				}
-			}
+			ByteArrayOutputStream buf = new ByteArrayOutputStream();
+			kafkaProperties.storeToXML(buf, null);
+			rep.saveStepAttribute(transformationId, stepId, "KAFKA", buf.toString());
 		} catch (Exception e) {
 			throw new KettleException("KafkaProducerMeta.Exception.saveRep", e);
 		}

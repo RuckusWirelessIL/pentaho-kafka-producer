@@ -1,6 +1,8 @@
 package com.ruckuswireless.pentaho.kafka.producer;
 
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.TreeSet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -256,11 +258,15 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 		wMessageField.setText(Const.NVL(producerMeta.getMessageField(), ""));
 		wKeyField.setText(Const.NVL(producerMeta.getKeyField(), ""));
 
+		TreeSet<String> propNames = new TreeSet<String>();
+		propNames.addAll(Arrays.asList(KafkaProducerMeta.KAFKA_PROPERTIES_NAMES));
+		propNames.addAll(producerMeta.getKafkaProperties().stringPropertyNames());
+
 		Properties kafkaProperties = producerMeta.getKafkaProperties();
-		for (int i = 0; i < KafkaProducerMeta.KAFKA_PROPERTIES_NAMES.length; ++i) {
-			String propName = KafkaProducerMeta.KAFKA_PROPERTIES_NAMES[i];
+		int i = 0;
+		for (String propName : propNames) {
 			String value = kafkaProperties.getProperty(propName);
-			TableItem item = new TableItem(wProps.table, i > 1 ? SWT.BOLD : SWT.NONE);
+			TableItem item = new TableItem(wProps.table, i++ > 1 ? SWT.BOLD : SWT.NONE);
 			int colnr = 1;
 			item.setText(colnr++, Const.NVL(propName, ""));
 			String defaultValue = KafkaProducerMeta.KAFKA_PROPERTIES_DEFAULTS.get(propName);
@@ -269,6 +275,7 @@ public class KafkaProducerDialog extends BaseStepDialog implements StepDialogInt
 			}
 			item.setText(colnr++, Const.NVL(value, defaultValue));
 		}
+
 		wProps.removeEmptyRows();
 		wProps.setRowNums();
 		wProps.optWidth(true);
