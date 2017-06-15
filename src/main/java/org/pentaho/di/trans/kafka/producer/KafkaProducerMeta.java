@@ -1,4 +1,4 @@
-package com.ruckuswireless.pentaho.kafka.producer;
+package org.pentaho.di.trans.kafka.producer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

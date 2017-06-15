@@ -1,4 +1,4 @@
-package com.ruckuswireless.pentaho.kafka.producer;
+package org.pentaho.di.trans.kafka.producer;
 
 import kafka.javaapi.producer.Producer;
 
