@@ -28,6 +28,9 @@ import org.pentaho.di.trans.step.StepMetaInterface;
 import org.w3c.dom.Node;
 
 import kafka.producer.ProducerConfig;
+import org.eclipse.swt.widgets.Shell;
+import org.pentaho.di.core.annotations.Step;
+import org.pentaho.di.trans.step.StepDialogInterface;
 
 /**
  * Kafka Producer step definitions and serializer to/from XML and to/from Kettle
@@ -35,6 +38,13 @@ import kafka.producer.ProducerConfig;
  *
  * @author Michael Spector
  */
+@Step(	
+		id = "DemoStep",
+		image = "org/pentaho/di/trans/kafka/producer/resources/kafka_producer.png",
+		i18nPackageName="org.pentaho.di.trans.kafka.producer",
+		name="KafkaProducerDialog.Shell.Title",
+		description = "KafkaProducerDialog.Shell.Tooltip",
+		categoryDescription="i18n:org.pentaho.di.trans.step:BaseStep.Category.Output")
 public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface {
 
 	public static final String[] KAFKA_PROPERTIES_NAMES = new String[] { "metadata.broker.list",
@@ -55,6 +65,20 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 	private String topic;
 	private String messageField;
 	private String keyField;
+        
+        /**
+	 * Called by Spoon to get a new instance of the SWT dialog for the step.
+	 * A standard implementation passing the arguments to the constructor of the step dialog is recommended.
+	 * 
+	 * @param shell		an SWT Shell
+	 * @param meta 		description of the step 
+	 * @param transMeta	description of the the transformation 
+	 * @param name		the name of the step
+	 * @return 			new instance of a dialog for this step 
+	 */
+	public StepDialogInterface getDialog(Shell shell, StepMetaInterface meta, TransMeta transMeta, String name) {
+		return new KafkaProducerDialog(shell, meta, transMeta, name);
+	}
 
 	Properties getKafkaProperties() {
 		return kafkaProperties;
@@ -125,7 +149,7 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 
 	public StepInterface getStep(StepMeta stepMeta, StepDataInterface stepDataInterface, int cnr, TransMeta transMeta,
 			Trans trans) {
-		return new KafkaProducerStep(stepMeta, stepDataInterface, cnr, transMeta, trans);
+		return new KafkaProducer(stepMeta, stepDataInterface, cnr, transMeta, trans);
 	}
 
 	public StepDataInterface getStepData() {
