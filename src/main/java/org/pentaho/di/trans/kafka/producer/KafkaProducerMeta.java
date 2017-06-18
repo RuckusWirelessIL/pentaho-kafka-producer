@@ -66,21 +66,7 @@ public class KafkaProducerMeta extends BaseStepMeta implements StepMetaInterface
 	private String messageField;
 	private String keyField;
         
-        /**
-	 * Called by Spoon to get a new instance of the SWT dialog for the step.
-	 * A standard implementation passing the arguments to the constructor of the step dialog is recommended.
-	 * 
-	 * @param shell		an SWT Shell
-	 * @param meta 		description of the step 
-	 * @param transMeta	description of the the transformation 
-	 * @param name		the name of the step
-	 * @return 			new instance of a dialog for this step 
-	 */
-	public StepDialogInterface getDialog(Shell shell, StepMetaInterface meta, TransMeta transMeta, String name) {
-		return new KafkaProducerDialog(shell, meta, transMeta, name);
-	}
-
-	Properties getKafkaProperties() {
+	public Properties getKafkaProperties() {
 		return kafkaProperties;
 	}
 
