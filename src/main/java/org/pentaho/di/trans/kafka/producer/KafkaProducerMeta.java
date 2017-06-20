@@ -39,7 +39,7 @@ import org.pentaho.di.trans.step.StepDialogInterface;
  * @author Michael Spector
  */
 @Step(	
-		id = "DemoStep",
+		id = "KafkaProducer",
 		image = "org/pentaho/di/trans/kafka/producer/resources/kafka_producer.png",
 		i18nPackageName="org.pentaho.di.trans.kafka.producer",
 		name="KafkaProducerDialog.Shell.Title",
