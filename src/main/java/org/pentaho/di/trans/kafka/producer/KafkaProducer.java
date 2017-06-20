@@ -1,4 +1,4 @@
-package com.ruckuswireless.pentaho.kafka.producer;
+package org.pentaho.di.trans.kafka.producer;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map.Entry;
@@ -23,7 +23,7 @@ import kafka.producer.ProducerConfig;
  *
  * @author Michael Spector
  */
-public class KafkaProducerStep extends BaseStep implements StepInterface {
+public class KafkaProducer extends BaseStep implements StepInterface {
 
 	private final static byte[] getUTFBytes(String source) {
 		if (source == null) {
@@ -36,7 +36,7 @@ public class KafkaProducerStep extends BaseStep implements StepInterface {
 		}
 	}
 
-	public KafkaProducerStep(StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
+	public KafkaProducer(StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
 			Trans trans) {
 		super(stepMeta, stepDataInterface, copyNr, transMeta, trans);
 	}

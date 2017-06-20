@@ -1,4 +1,4 @@
-package com.ruckuswireless.pentaho.kafka.producer;
+package org.pentaho.di.ui.trans.kafka.producer;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -37,6 +37,9 @@ import org.pentaho.di.ui.core.widget.ColumnInfo;
 import org.pentaho.di.ui.core.widget.TableView;
 import org.pentaho.di.ui.core.widget.TextVar;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
+
+import org.pentaho.di.trans.kafka.producer.KafkaProducerMeta;
+import org.pentaho.di.trans.kafka.producer.Messages;
 
 /**
  * UI for the Kafka Producer step
