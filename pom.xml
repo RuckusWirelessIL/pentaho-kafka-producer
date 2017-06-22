@@ -12,8 +12,8 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<maven.compiler.source>1.6</maven.compiler.source>
                 <kettle.version>6.1.0.2-208</kettle.version>
-                <kafka.scala.version>2.11</kafka.scala.version>
-                <kafka.version>0.10.2.1</kafka.version>
+                <kafka.scala.version>2.10</kafka.scala.version>
+                <kafka.version>0.8.2.1</kafka.version>
 		<buildId>${maven.build.timestamp}</buildId>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 	</properties>
