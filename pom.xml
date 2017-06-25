@@ -11,9 +11,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<maven.compiler.source>1.6</maven.compiler.source>
-                <kettle.version>6.1.0.2-208</kettle.version>
-                <kafka.scala.version>2.10</kafka.scala.version>
-                <kafka.version>0.8.2.1</kafka.version>
+    <kettle.version>6.1.0.2-208</kettle.version>
+    <kafka.scala.version>2.10</kafka.scala.version>
+    <kafka.version>0.8.2.1</kafka.version>
 		<buildId>${maven.build.timestamp}</buildId>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 	</properties>
@@ -59,7 +59,7 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
-                        </exclusions>
+      </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
@@ -74,7 +74,6 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
@@ -109,8 +108,8 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-                                                        <excludeScope>provided</excludeScope>
-                                                        <includeScope>runtime</includeScope>
+              <excludeScope>provided</excludeScope>
+              <includeScope>runtime</includeScope>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
 						</configuration>
 					</execution>
